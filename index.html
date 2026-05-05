@@ -1,0 +1,1999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>theautotriage | AI-Powered Pre-Diagnostic Intelligence for the UK Automotive Sector</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+
+:root{
+  /* theautotriage Brand — Deep Navy + Electric Amber/Orange */
+  --amber:#F59E0B;
+  --amber-light:#FCD34D;
+  --amber-dim:#D97706;
+  --amber-dark:#B45309;
+
+  /* Dark Backgrounds */
+  --bg-black:#030A12;
+  --bg-deep:#050E1A;
+  --bg-dark:#071422;
+  --bg-card:#0B1D30;
+
+  /* Navy Accents */
+  --navy:#0A1E38;
+  --navy-mid:#0D2848;
+  --navy-light:#10335C;
+  --navy-bright:#1650A0;
+  --blue-accent:#1650A0;
+  --blue-soft:#4A8EE8;
+  --blue-glow:rgba(20,80,160,0.15);
+
+  /* Light Sections */
+  --light-bg:#F0F5FB;
+  --light-card:#FFFFFF;
+  --light-border:#C2D8F0;
+  --text-dark:#020C1E;
+  --text-mid:#162E50;
+  --text-muted:#3D5870;
+
+  /* Text on Dark */
+  --white:#FFFFFF;
+  --txt-secondary:#8AAFCC;
+  --txt-dim:#375870;
+
+  /* UI */
+  --card-bg:rgba(11,29,48,0.92);
+  --card-border:rgba(245,158,11,0.15);
+  --navy-card:rgba(10,30,56,0.8);
+  --navy-border:rgba(20,80,160,0.25);
+
+  --nav-h:72px;
+  --max-w:1200px;
+  --font:'Plus Jakarta Sans',sans-serif;
+  --display:'Sora',sans-serif;
+  --mono:'IBM Plex Mono',monospace;
+  --ease:cubic-bezier(0.4,0,0.2,1);
+  --ease-out:cubic-bezier(0,0,0.2,1);
+}
+
+body{font-family:var(--font);color:var(--white);background:var(--bg-black);overflow-x:hidden;}
+
+::-webkit-scrollbar{width:4px;}
+::-webkit-scrollbar-track{background:var(--bg-black);}
+::-webkit-scrollbar-thumb{background:var(--amber);border-radius:2px;}
+
+img{display:block;max-width:100%;}
+
+/* ─── NAVBAR ─────────────────────────────────────────── */
+.navbar{
+  position:fixed;top:0;left:0;width:100%;height:var(--nav-h);
+  background:rgba(3,10,18,0.96);backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(245,158,11,0.12);
+  z-index:1000;display:flex;align-items:center;
+  padding:0 clamp(16px,5vw,60px);
+  justify-content:space-between;
+  transition:border-color 0.3s;
+}
+.nav-logo{
+  font-family:var(--display);font-size:20px;font-weight:800;
+  color:var(--amber);letter-spacing:-0.3px;
+  display:flex;align-items:center;gap:12px;
+  cursor:pointer;text-decoration:none;flex-shrink:0;
+}
+.nav-logo-icon{
+  width:40px;height:40px;
+  background:linear-gradient(135deg,var(--amber) 0%,var(--amber-dark) 100%);
+  border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 4px 14px rgba(245,158,11,0.3);
+}
+.nav-logo-icon svg{width:22px;height:22px;}
+.nav-logo-text{display:flex;flex-direction:column;line-height:1;}
+.nav-logo-text span{font-size:10px;font-family:var(--mono);font-weight:500;color:var(--txt-secondary);letter-spacing:2px;text-transform:uppercase;margin-top:3px;}
+
+.nav-links{display:flex;align-items:center;gap:4px;list-style:none;}
+.nav-links li button{
+  background:none;border:none;
+  color:var(--txt-secondary);
+  font-size:11px;font-weight:600;
+  padding:8px 16px;border-radius:7px;
+  transition:all 0.22s var(--ease);
+  cursor:pointer;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;
+  position:relative;white-space:nowrap;
+}
+.nav-links li button:hover{color:var(--amber);background:rgba(245,158,11,0.06);}
+.nav-links li button.active{color:var(--amber);background:rgba(245,158,11,0.08);}
+.nav-links li button.active::after{
+  content:'';position:absolute;bottom:5px;left:50%;
+  transform:translateX(-50%);width:14px;height:2px;
+  background:var(--amber);border-radius:2px;
+}
+
+.nav-right{display:flex;align-items:center;gap:10px;}
+.btn-demo-nav{
+  background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);border:none;padding:9px 20px;border-radius:8px;
+  font-size:11px;font-weight:700;cursor:pointer;
+  transition:all 0.22s;font-family:var(--mono);
+  letter-spacing:0.8px;text-transform:uppercase;white-space:nowrap;
+  box-shadow:0 2px 10px rgba(245,158,11,0.2);
+}
+.btn-demo-nav:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(245,158,11,0.4);}
+
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px;background:none;border:none;flex-shrink:0;}
+.hamburger span{width:22px;height:2px;background:var(--amber);border-radius:2px;transition:0.3s;display:block;}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+.hamburger.open span:nth-child(2){opacity:0;}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
+
+.mobile-nav{
+  display:none;position:fixed;top:var(--nav-h);left:0;width:100%;
+  background:rgba(3,10,18,0.99);backdrop-filter:blur(20px);
+  padding:12px 20px 20px;flex-direction:column;gap:2px;
+  z-index:999;border-bottom:1px solid rgba(245,158,11,0.1);
+  animation:slideDown 0.25s var(--ease-out);
+}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.mobile-nav.open{display:flex;}
+.mobile-nav button{
+  background:none;border:none;color:var(--txt-secondary);
+  font-size:13px;font-weight:600;padding:13px 12px;
+  border-bottom:1px solid rgba(245,158,11,0.06);
+  cursor:pointer;font-family:var(--mono);text-align:left;
+  text-transform:uppercase;letter-spacing:1px;
+  transition:color 0.2s,background 0.2s;border-radius:6px;
+}
+.mobile-nav button:hover{color:var(--amber);background:rgba(245,158,11,0.05);}
+.mobile-nav .mob-cta{
+  margin-top:8px;background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);border:none;padding:13px;
+  border-radius:8px;font-weight:700;font-size:12px;
+  letter-spacing:1px;text-transform:uppercase;cursor:pointer;
+  font-family:var(--mono);
+}
+
+/* ─── PAGE SYSTEM ─────────────────────────────────────── */
+.page{display:none;min-height:100vh;padding-top:var(--nav-h);}
+.page.active{display:block;animation:pgIn 0.35s var(--ease);}
+@keyframes pgIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+
+/* ─── SECTION COMMONS ─────────────────────────────────── */
+.label-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--amber);margin-bottom:14px;
+}
+.label-tag::before{content:'';width:20px;height:1px;background:var(--amber);}
+
+.label-tag-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:3px;text-transform:uppercase;
+  color:var(--blue-soft);margin-bottom:14px;
+}
+.label-tag-blue::before{content:'';width:20px;height:1px;background:var(--blue-soft);}
+
+.section-h2{
+  font-family:var(--display);font-size:clamp(28px,3.5vw,52px);
+  font-weight:800;line-height:1.1;letter-spacing:-0.8px;
+  margin-bottom:10px;
+}
+.section-h2.amber{color:var(--amber);}
+.section-h2.dark{color:var(--text-dark);}
+.section-h2.white{color:var(--white);}
+.section-h2.navy-txt{color:var(--navy-light);}
+
+.section-divider{width:56px;height:3px;margin:16px 0 28px;border-radius:2px;}
+.divider-amber{background:linear-gradient(90deg,var(--amber),transparent);}
+.divider-blue{background:linear-gradient(90deg,var(--blue-accent),transparent);}
+.divider-center{margin:16px auto 28px;}
+
+.para-dark{color:var(--txt-secondary);line-height:1.85;font-size:17px;}
+.para-light{color:var(--text-mid);line-height:1.85;font-size:17px;}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+
+/* ─── BUTTONS ─────────────────────────────────────────── */
+.btn-primary{
+  display:inline-flex;align-items:center;gap:8px;
+  background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);padding:13px 28px;border-radius:8px;
+  text-decoration:none;font-weight:700;font-size:12px;
+  letter-spacing:0.8px;text-transform:uppercase;
+  transition:all 0.25s;font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(245,158,11,0.25);
+}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(245,158,11,0.4);}
+
+.btn-secondary{
+  display:inline-flex;align-items:center;gap:8px;
+  border:1.5px solid rgba(245,158,11,0.4);color:var(--amber);
+  padding:12px 28px;border-radius:8px;text-decoration:none;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);background:none;cursor:pointer;
+}
+.btn-secondary:hover{background:rgba(245,158,11,0.07);border-color:var(--amber);}
+
+.btn-blue{
+  display:inline-flex;align-items:center;gap:8px;
+  background:var(--blue-accent);color:var(--white);
+  padding:12px 28px;border-radius:8px;
+  font-weight:700;font-size:12px;letter-spacing:0.8px;
+  text-transform:uppercase;transition:all 0.25s;
+  font-family:var(--mono);border:none;cursor:pointer;
+  box-shadow:0 4px 16px rgba(20,80,160,0.3);
+}
+.btn-blue:hover{transform:translateY(-2px);background:#1040A0;box-shadow:0 8px 28px rgba(20,80,160,0.45);}
+
+/* ─── STATUS INDICATORS ─────────────────────────────── */
+.risk-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 10px;border-radius:20px;
+  font-size:10px;font-weight:700;font-family:var(--mono);letter-spacing:0.5px;
+}
+.risk-amber{background:rgba(245,158,11,0.12);color:var(--amber);border:1px solid rgba(245,158,11,0.3);}
+.risk-green{background:rgba(52,211,153,0.12);color:#34D399;border:1px solid rgba(52,211,153,0.25);}
+.risk-red{background:rgba(239,68,68,0.12);color:#EF4444;border:1px solid rgba(239,68,68,0.25);}
+.risk-blue{background:rgba(74,142,232,0.12);color:var(--blue-soft);border:1px solid rgba(74,142,232,0.25);}
+.risk-dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+
+/* ─── HERO ──────────────────────────────────────────────── */
+.hero{
+  position:relative;
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,90px);
+  background:var(--bg-black);overflow:hidden;
+  min-height:calc(100vh - var(--nav-h));
+  display:flex;align-items:center;
+}
+.hero-noise{
+  position:absolute;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;
+}
+.hero-grid-bg{
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(245,158,11,0.04) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(245,158,11,0.04) 1px,transparent 1px);
+  background-size:50px 50px;
+  pointer-events:none;z-index:0;
+}
+.hero-glow-1{
+  position:absolute;top:-200px;right:-100px;
+  width:600px;height:600px;
+  background:radial-gradient(circle,rgba(245,158,11,0.07) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-glow-2{
+  position:absolute;bottom:-150px;left:-100px;
+  width:500px;height:500px;
+  background:radial-gradient(circle,rgba(20,80,160,0.08) 0%,transparent 65%);
+  pointer-events:none;z-index:0;
+}
+.hero-inner{
+  max-width:var(--max-w);margin:0 auto;
+  padding:0 clamp(16px,4vw,60px);
+  display:grid;grid-template-columns:1.15fr 0.85fr;
+  gap:clamp(30px,5vw,80px);align-items:center;
+  position:relative;z-index:1;width:100%;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:9px;
+  background:rgba(245,158,11,0.07);
+  border:1px solid rgba(245,158,11,0.25);
+  color:var(--amber);font-size:10px;font-weight:700;
+  letter-spacing:2.5px;padding:6px 14px 6px 10px;
+  border-radius:4px;text-transform:uppercase;
+  margin-bottom:20px;font-family:var(--mono);
+}
+.hero-badge-dot{
+  width:7px;height:7px;border-radius:50%;background:var(--amber);
+  animation:pulse-dot 1.6s ease-in-out infinite;flex-shrink:0;
+}
+@keyframes pulse-dot{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.35;transform:scale(0.55);}}
+
+.hero h1{
+  font-family:var(--display);
+  font-size:clamp(38px,4.5vw,68px);
+  line-height:1.06;font-weight:800;
+  letter-spacing:-1.5px;color:var(--white);
+  margin-bottom:10px;
+}
+.hero h1 .amber{color:var(--amber);}
+.hero h1 .blue{color:var(--blue-soft);}
+
+.hero-rule{
+  width:64px;height:3px;
+  background:linear-gradient(90deg,var(--amber),rgba(20,80,160,0.6));
+  margin:20px 0 24px;border-radius:2px;
+}
+.hero-body{
+  color:var(--txt-secondary);font-size:clamp(14px,1.5vw,19px);
+  line-height:1.8;margin-bottom:36px;max-width:540px;
+}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+
+/* Triage Score Card */
+.score-card{
+  background:linear-gradient(145deg,rgba(11,29,48,0.95),rgba(5,14,26,0.98));
+  border:1px solid rgba(245,158,11,0.2);border-radius:18px;
+  padding:32px;position:relative;overflow:hidden;
+  box-shadow:0 24px 70px rgba(0,0,0,0.55),0 0 0 1px rgba(245,158,11,0.05);
+}
+.score-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--blue-accent),transparent);
+}
+.score-card-label{
+  font-family:var(--mono);color:var(--amber);
+  font-size:9px;letter-spacing:3px;text-transform:uppercase;margin-bottom:20px;
+  display:flex;align-items:center;gap:8px;
+}
+.score-card-label::after{content:'';flex:1;height:1px;background:rgba(245,158,11,0.15);}
+.score-row{
+  display:flex;align-items:center;gap:12px;
+  padding:11px 0;border-bottom:1px solid rgba(255,255,255,0.04);
+}
+.score-row:last-child{border-bottom:none;padding-bottom:0;}
+.score-icon{
+  width:30px;height:30px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;font-size:14px;
+}
+.score-icon.amber-bg{background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);}
+.score-icon.blue-bg{background:rgba(20,80,160,0.1);border:1px solid rgba(20,80,160,0.2);}
+.score-icon.green-bg{background:rgba(52,211,153,0.1);border:1px solid rgba(52,211,153,0.2);}
+.score-lbl{color:var(--txt-secondary);font-size:13px;flex:1;font-weight:500;}
+.score-val{
+  font-family:var(--display);color:var(--white);
+  font-size:17px;font-weight:700;
+  display:flex;align-items:center;gap:8px;
+}
+.score-big{
+  margin-top:20px;padding-top:20px;
+  border-top:1px solid rgba(245,158,11,0.12);
+  display:flex;align-items:center;gap:18px;
+}
+.score-big-num{
+  font-family:var(--display);font-size:48px;font-weight:800;
+  color:var(--amber);line-height:1;letter-spacing:-2px;
+}
+.score-big-info .label{color:var(--white);font-weight:700;font-size:15px;margin-bottom:6px;}
+.score-big-info .sub{display:flex;gap:6px;flex-wrap:wrap;}
+
+/* ─── STATS STRIP ─────────────────────────────────────── */
+.stats-strip{
+  background:linear-gradient(135deg,rgba(10,30,56,0.9),rgba(11,29,48,0.95));
+  border-top:1px solid rgba(245,158,11,0.1);
+  border-bottom:1px solid rgba(245,158,11,0.1);
+  padding:clamp(32px,5vw,52px) 0;
+}
+.stats-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(20px,3vw,48px);
+}
+.stat-blk{border-left:2px solid rgba(245,158,11,0.2);padding-left:20px;}
+.stat-blk:first-child{border-left:none;padding-left:0;}
+.stat-num{
+  display:block;font-family:var(--display);
+  font-size:clamp(28px,3.5vw,42px);font-weight:800;
+  color:var(--amber);letter-spacing:-1px;line-height:1;
+  margin-bottom:8px;
+}
+.stat-txt{color:var(--txt-secondary);font-size:13px;line-height:1.55;margin-bottom:6px;}
+.stat-source{font-family:var(--mono);font-size:9px;color:var(--txt-dim);letter-spacing:1px;text-transform:uppercase;}
+
+/* ─── SECTION LIGHT (How It Works) ──────────────────────── */
+.section-light{
+  background:var(--light-bg);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.process-intro{
+  max-width:680px;margin:0 auto 48px;text-align:center;
+}
+.process-grid{
+  display:grid;grid-template-columns:repeat(4,1fr);
+  gap:clamp(16px,2.5vw,28px);
+}
+.process-card{
+  background:var(--light-card);border-radius:14px;
+  overflow:hidden;border:1px solid var(--light-border);
+  transition:transform 0.25s var(--ease),box-shadow 0.25s;
+}
+.process-card:hover{transform:translateY(-4px);box-shadow:0 16px 48px rgba(10,30,56,0.12);}
+.process-card-img{
+  width:100%;height:160px;object-fit:cover;
+  background:linear-gradient(135deg,rgba(10,30,56,0.06),rgba(245,158,11,0.08));
+  display:flex;align-items:center;justify-content:center;
+  font-size:56px;overflow:hidden;position:relative;
+}
+.process-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.process-card-body{padding:20px;}
+.step-tag{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--blue-accent);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:8px;
+}
+.process-card h3{font-family:var(--display);color:var(--text-dark);font-size:17px;font-weight:700;margin-bottom:10px;}
+.process-card p{color:var(--text-muted);font-size:13.5px;line-height:1.65;}
+
+/* ─── SECTION DARK (Core Capabilities) ──────────────────── */
+.section-dark{
+  background:var(--bg-dark);
+  padding:clamp(60px,8vw,100px) 0;
+}
+.platform-sub{max-width:720px;margin-bottom:48px;}
+.platform-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(16px,2.5vw,28px);
+}
+.platform-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.12);
+  border-radius:16px;overflow:hidden;
+  transition:transform 0.25s var(--ease),border-color 0.25s,box-shadow 0.25s;
+}
+.platform-card:hover{transform:translateY(-4px);border-color:rgba(245,158,11,0.28);box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.platform-card-img{
+  width:100%;height:170px;object-fit:cover;
+  background:linear-gradient(135deg,rgba(10,30,56,0.5),rgba(245,158,11,0.08));
+  display:flex;align-items:center;justify-content:center;
+  font-size:64px;position:relative;overflow:hidden;
+}
+.platform-card-img img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0;}
+.platform-card-img::after{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(to bottom,transparent 50%,var(--bg-card) 100%);
+}
+.platform-card .inner{padding:22px 24px 24px;}
+.element-badge{
+  font-family:var(--mono);font-size:9px;font-weight:700;
+  color:var(--amber);letter-spacing:2px;text-transform:uppercase;
+  margin-bottom:10px;padding:3px 8px;
+  background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);
+  border-radius:4px;display:inline-block;
+}
+.platform-card h3{font-family:var(--display);color:var(--white);font-size:18px;font-weight:700;margin-bottom:10px;}
+.platform-card p{color:var(--txt-secondary);font-size:14px;line-height:1.7;}
+.more-text{
+  color:var(--txt-dim);font-size:13px;line-height:1.65;
+  margin-top:14px;max-height:0;overflow:hidden;
+  transition:max-height 0.4s var(--ease);
+}
+.platform-card.open .more-text{max-height:300px;}
+.expand-btn{
+  margin-top:16px;background:none;border:1px solid rgba(245,158,11,0.25);
+  color:var(--amber);padding:7px 16px;border-radius:6px;
+  font-size:11px;font-weight:600;cursor:pointer;
+  font-family:var(--mono);letter-spacing:0.5px;
+  transition:all 0.2s;
+}
+.expand-btn:hover{background:rgba(245,158,11,0.08);}
+
+/* ─── ABOUT PAGE ────────────────────────────────────────── */
+.about-hero{
+  padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);
+  background:var(--bg-black);
+}
+.about-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:clamp(40px,6vw,80px);align-items:start;
+}
+.about-para{
+  color:var(--txt-secondary);font-size:16px;line-height:1.8;margin-bottom:18px;
+}
+.about-tags{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:10px;
+  margin-top:28px;
+}
+.feature-tag{
+  background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.18);
+  color:var(--amber);font-size:12px;font-weight:600;
+  padding:9px 14px;border-radius:7px;font-family:var(--mono);
+  letter-spacing:0.3px;
+}
+.founder-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.15);
+  border-radius:16px;padding:28px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.founder-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),transparent);
+}
+.founder-tag{
+  font-family:var(--mono);font-size:9px;letter-spacing:2.5px;
+  text-transform:uppercase;color:var(--amber);margin-bottom:10px;
+}
+.founder-card h4{font-family:var(--display);color:var(--white);font-size:20px;font-weight:700;margin-bottom:4px;}
+.founder-title{color:var(--txt-secondary);font-size:13px;margin-bottom:14px;font-weight:500;}
+.founder-card p{color:var(--txt-dim);font-size:14px;line-height:1.7;margin-bottom:12px;}
+.founder-card p:last-child{margin-bottom:0;}
+
+/* ─── PLATFORM PAGE ─────────────────────────────────────── */
+.kpi-row{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,2vw,20px);margin-bottom:40px;}
+.kpi-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.12);
+  border-radius:12px;padding:20px 18px;text-align:center;
+  transition:border-color 0.25s;
+}
+.kpi-card:hover{border-color:rgba(245,158,11,0.28);}
+.kpi-num{font-family:var(--display);font-size:clamp(26px,3vw,38px);font-weight:800;color:var(--amber);letter-spacing:-1px;margin-bottom:6px;}
+.kpi-lbl{color:var(--txt-secondary);font-size:12px;font-family:var(--mono);letter-spacing:0.5px;}
+
+/* ─── MARKET PAGE ────────────────────────────────────────── */
+.charts-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2.5vw,28px);margin-bottom:28px;}
+.chart-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.1);
+  border-radius:14px;padding:22px;
+}
+.chart-card-full{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.1);
+  border-radius:14px;padding:22px;margin-bottom:28px;
+}
+.chart-title{font-family:var(--display);color:var(--white);font-size:16px;font-weight:700;margin-bottom:4px;}
+.chart-sub{color:var(--txt-dim);font-size:12px;font-family:var(--mono);margin-bottom:16px;}
+.chart-wrap{height:240px;position:relative;}
+.chart-wrap-lg{height:360px;position:relative;}
+
+.market-kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,2vw,24px);margin-bottom:36px;}
+.mkt-card{
+  background:linear-gradient(145deg,var(--card-bg),rgba(10,30,56,0.5));
+  border:1px solid rgba(20,80,160,0.2);border-radius:12px;padding:20px;
+}
+.mkt-num{font-family:var(--display);font-size:clamp(28px,3vw,40px);font-weight:800;color:var(--blue-soft);letter-spacing:-1px;margin-bottom:6px;}
+.mkt-lbl{color:var(--txt-secondary);font-size:13px;line-height:1.5;}
+.mkt-source{font-family:var(--mono);font-size:9px;color:var(--txt-dim);letter-spacing:1px;text-transform:uppercase;margin-top:8px;}
+
+/* ─── PRICING PAGE ───────────────────────────────────────── */
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(16px,2.5vw,28px);margin-bottom:56px;}
+.price-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.12);
+  border-radius:16px;padding:30px;position:relative;
+  transition:transform 0.25s,border-color 0.25s,box-shadow 0.25s;
+}
+.price-card:hover{transform:translateY(-4px);border-color:rgba(245,158,11,0.25);box-shadow:0 16px 48px rgba(0,0,0,0.3);}
+.price-card.featured{
+  border-color:var(--amber);
+  box-shadow:0 0 0 1px rgba(245,158,11,0.15),0 24px 60px rgba(0,0,0,0.35);
+  background:linear-gradient(145deg,rgba(11,29,48,0.97),rgba(10,30,56,0.95));
+}
+.price-card.featured::before{
+  content:'MOST POPULAR';position:absolute;top:-1px;left:50%;
+  transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);font-size:9px;font-weight:700;
+  font-family:var(--mono);letter-spacing:2px;
+  padding:4px 16px;border-radius:0 0 8px 8px;
+}
+.price-tier{font-family:var(--mono);font-size:9px;letter-spacing:2.5px;text-transform:uppercase;color:var(--amber);margin-bottom:8px;}
+.price-card h3{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:10px;}
+.price-card .desc{color:var(--txt-secondary);font-size:13px;line-height:1.6;margin-bottom:20px;}
+.price-amount{font-family:var(--display);font-size:clamp(36px,4vw,52px);font-weight:800;color:var(--white);letter-spacing:-2px;}
+.price-period{font-family:var(--mono);font-size:10px;color:var(--txt-dim);letter-spacing:1px;margin-bottom:24px;margin-top:4px;}
+.price-divider{height:1px;background:rgba(245,158,11,0.1);margin-bottom:22px;}
+.price-features{list-style:none;margin-bottom:28px;}
+.price-features li{
+  color:var(--txt-secondary);font-size:13.5px;padding:7px 0;
+  border-bottom:1px solid rgba(255,255,255,0.04);
+  display:flex;align-items:center;gap:10px;
+}
+.price-features li:last-child{border-bottom:none;}
+.chk{color:var(--amber);font-weight:700;flex-shrink:0;}
+.price-btn{
+  width:100%;padding:13px;border-radius:8px;
+  font-family:var(--mono);font-size:12px;font-weight:700;
+  letter-spacing:0.8px;text-transform:uppercase;cursor:pointer;transition:all 0.25s;border:none;
+}
+.price-btn-outline{
+  background:none;border:1.5px solid rgba(245,158,11,0.35);color:var(--amber);
+}
+.price-btn-outline:hover{background:rgba(245,158,11,0.07);}
+.price-btn-amber{
+  background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);box-shadow:0 4px 16px rgba(245,158,11,0.3);
+}
+.price-btn-amber:hover{box-shadow:0 8px 28px rgba(245,158,11,0.45);transform:translateY(-1px);}
+
+/* ─── FAQ ────────────────────────────────────────────────── */
+.faq-wrap{margin-bottom:48px;}
+.faq-item{
+  border-bottom:1px solid rgba(245,158,11,0.08);
+  padding:20px 0;
+}
+.faq-q{
+  display:flex;justify-content:space-between;align-items:center;
+  cursor:pointer;gap:20px;
+}
+.faq-q h4{font-family:var(--display);color:var(--white);font-size:16px;font-weight:600;}
+.faq-icon{
+  color:var(--amber);font-size:22px;font-weight:300;
+  flex-shrink:0;transition:transform 0.25s;
+}
+.faq-item.open .faq-icon{transform:rotate(45deg);}
+.faq-body{
+  color:var(--txt-secondary);font-size:14.5px;line-height:1.75;
+  max-height:0;overflow:hidden;
+  transition:max-height 0.35s var(--ease),padding 0.35s;
+}
+.faq-item.open .faq-body{max-height:300px;padding-top:14px;}
+
+/* ─── CONTACT ────────────────────────────────────────────── */
+.contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(40px,6vw,80px);align-items:start;}
+.contact-left-para{color:var(--txt-secondary);font-size:15px;line-height:1.75;margin-bottom:16px;}
+.contact-item{display:flex;align-items:flex-start;gap:14px;margin-bottom:18px;}
+.contact-icon{
+  width:40px;height:40px;background:rgba(245,158,11,0.08);
+  border:1px solid rgba(245,158,11,0.2);border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.contact-item-text strong{display:block;color:var(--white);font-size:13px;margin-bottom:2px;}
+.contact-item-text span{color:var(--txt-secondary);font-size:13px;}
+.contact-form-card{
+  background:var(--card-bg);border:1px solid rgba(245,158,11,0.15);
+  border-radius:16px;padding:36px;position:relative;overflow:hidden;
+}
+.contact-form-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,var(--amber),var(--blue-accent),transparent);
+}
+.contact-form-card h3{font-family:var(--display);color:var(--white);font-size:22px;font-weight:800;margin-bottom:24px;}
+.form-group{margin-bottom:18px;}
+.form-label{display:block;font-family:var(--mono);font-size:10px;font-weight:700;color:var(--txt-dim);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px;}
+.form-ctrl{
+  width:100%;background:rgba(255,255,255,0.04);
+  border:1px solid rgba(245,158,11,0.2);border-radius:8px;
+  padding:12px 16px;color:var(--white);font-size:14px;
+  font-family:var(--font);transition:all 0.25s;outline:none;
+}
+.form-ctrl::placeholder{color:var(--txt-dim);}
+.form-ctrl:focus{border-color:rgba(245,158,11,0.5);background:rgba(245,158,11,0.03);}
+.form-ctrl option{background:var(--bg-card);}
+.ta{resize:vertical;min-height:90px;}
+.form-submit{
+  width:100%;background:linear-gradient(135deg,var(--amber),var(--amber-dark));
+  color:var(--bg-black);border:none;padding:14px;border-radius:8px;
+  font-family:var(--mono);font-size:12px;font-weight:700;letter-spacing:1px;
+  text-transform:uppercase;cursor:pointer;transition:all 0.25s;
+}
+.form-submit:hover{box-shadow:0 6px 20px rgba(245,158,11,0.35);transform:translateY(-1px);}
+
+/* ─── FOOTER ───────────────────────────────────────────── */
+footer{background:var(--bg-black);border-top:1px solid rgba(245,158,11,0.1);padding:clamp(40px,6vw,80px) 0 28px;}
+.footer-inner{max-width:var(--max-w);margin:0 auto;padding:0 clamp(16px,4vw,60px);}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:clamp(30px,5vw,80px);margin-bottom:40px;}
+.footer-logo{font-family:var(--display);color:var(--amber);font-size:22px;font-weight:800;display:block;margin-bottom:14px;}
+.footer-brand p{color:var(--txt-dim);font-size:13px;line-height:1.75;}
+.footer-col h5{font-family:var(--mono);color:var(--white);font-size:10px;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:14px;}
+.footer-col a{display:block;color:var(--txt-dim);font-size:13px;margin-bottom:10px;cursor:pointer;transition:color 0.2s;text-decoration:none;}
+.footer-col a:hover{color:var(--amber);}
+.footer-bottom{border-top:1px solid rgba(245,158,11,0.08);padding-top:20px;display:flex;flex-direction:column;gap:4px;}
+.footer-bottom p{color:var(--txt-dim);font-size:12px;font-family:var(--mono);}
+.footer-bottom span{color:var(--amber);}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media(min-width:1400px){
+  :root{--max-w:1300px;}
+  .hero h1{font-size:72px;}
+  .hero-body{font-size:20px;max-width:580px;}
+  .section-h2{font-size:54px;}
+  .para-dark,.para-light{font-size:18px;}
+  .stat-num{font-size:46px;}
+  .process-card-img{height:180px;}
+  .platform-card-img{height:200px;}
+  .chart-wrap{height:300px;}
+  .chart-wrap-lg{height:420px;}
+  .score-big-num{font-size:52px;}
+}
+@media(max-width:900px){
+  .platform-grid{grid-template-columns:repeat(2,1fr);}
+  .pricing-grid{grid-template-columns:1fr 1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);}
+  .market-kpi{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:768px){
+  .nav-links,.nav-right .btn-demo-nav{display:none;}
+  .hamburger{display:flex;}
+  .nav-right{gap:0;}
+  .hero-inner{grid-template-columns:1fr;}
+  .hero-inner>div:last-child{display:none;}
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:repeat(2,1fr);}
+  .platform-grid{grid-template-columns:1fr;}
+  .about-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:28px;}
+  .kpi-card{padding:16px 12px;}
+  .charts-grid{grid-template-columns:1fr;gap:16px;margin-bottom:16px;}
+  .chart-card{padding:16px;}
+  .chart-card-full{padding:16px;margin-bottom:16px;}
+  .chart-wrap{height:200px;}
+  .chart-wrap-lg{height:260px;}
+  .pricing-grid{grid-template-columns:1fr;}
+  .contact-grid{grid-template-columns:1fr;}
+  .footer-grid{grid-template-columns:1fr;}
+  .market-kpi{grid-template-columns:1fr;}
+}
+@media(max-width:480px){
+  .stats-grid{grid-template-columns:repeat(2,1fr);}
+  .process-grid{grid-template-columns:1fr;}
+  .kpi-row{grid-template-columns:1fr;}
+  .about-tags{grid-template-columns:1fr;}
+  .chart-wrap{height:180px;}
+  .chart-wrap-lg{height:220px;}
+  .chart-title{font-size:14px;}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════ NAVBAR ═══════════ -->
+<nav class="navbar">
+  <a class="nav-logo" href="#" onclick="showPage('home');return false;">
+    
+    <!-- ❌ Removed nav-logo-icon -->
+
+    <div class="nav-logo-text">theautotriage<span>Pre-Diagnostic Intelligence</span></div>
+  </a>
+
+  <ul class="nav-links">
+    <li><button id="nav-home" class="active" onclick="showPage('home')">Home</button></li>
+    <li><button id="nav-about" onclick="showPage('about')">About</button></li>
+    <li><button id="nav-platform" onclick="showPage('platform')">Platform</button></li>
+    <li><button id="nav-market" onclick="showPage('market')">Market</button></li>
+    <li><button id="nav-pricing" onclick="showPage('pricing')">Pricing</button></li>
+    <li><button id="nav-contact" onclick="showPage('contact')">Contact</button></li>
+  </ul>
+
+  <div class="nav-right">
+    <button class="btn-demo-nav" onclick="showPage('contact')">Book a Demo</button>
+    <button class="hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</nav>
+
+<!-- Mobile Nav -->
+<div class="mobile-nav" id="mobileNav">
+  <button onclick="showPage('home');closeMobile()">Home</button>
+  <button onclick="showPage('about');closeMobile()">About</button>
+  <button onclick="showPage('platform');closeMobile()">Platform</button>
+  <button onclick="showPage('market');closeMobile()">Market</button>
+  <button onclick="showPage('pricing');closeMobile()">Pricing</button>
+  <button onclick="showPage('contact');closeMobile()">Contact</button>
+  <button class="mob-cta" onclick="showPage('contact');closeMobile()">Book a Demo →</button>
+</div>
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: HOME
+═══════════════════════════════════════════════ -->
+<div class="page active" id="page-home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-noise"></div>
+    <div class="hero-grid-bg"></div>
+    <div class="hero-glow-1"></div>
+    <div class="hero-glow-2"></div>
+    <div class="hero-inner">
+      <div>
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          UK's First AI Pre-Diagnostic Intelligence Layer for Automotive Aftercare
+        </div>
+        <h1>Diagnose. <span class="amber">Triage.</span><br><span class="blue">Route.</span></h1>
+        <div class="hero-rule"></div>
+        <p class="hero-body">theautotriage transforms the high-uncertainty vehicle repair process into a data-driven, transparent ecosystem — converting unstructured consumer evidence (engine audio, dashboard images, vague descriptions) into "Technician-Ready" diagnostic case files using advanced AI signal processing, routing vehicles to certified specialists instantly across the UK's £100 billion automotive aftercare sector.</p>
+        <div class="hero-btns">
+          <button class="btn-primary" onclick="showPage('contact')">Book a Demo →</button>
+          <button class="btn-secondary" onclick="showPage('platform')">Explore Platform</button>
+        </div>
+      </div>
+      <div>
+        <div class="score-card">
+          <div class="score-card-label">Live Triage Intelligence Monitor</div>
+          <div class="score-row">
+            <div class="score-icon amber-bg">🔊</div>
+            <span class="score-lbl">Acoustic FFT Analysis Complete</span>
+            <span class="score-val">97%</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">📷</div>
+            <span class="score-lbl">CNN Visual Fault Classification</span>
+            <span class="score-val">91/94</span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon amber-bg">⚡</div>
+            <span class="score-lbl">EV/ADAS Routing Flags Active</span>
+            <span class="score-val">4 <span class="risk-blue risk-badge"><span class="risk-dot"></span>Specialist</span></span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon green-bg">🛡️</div>
+            <span class="score-lbl">DVSA & GDPR Compliance</span>
+            <span class="score-val"><span class="risk-badge risk-green"><span class="risk-dot"></span>Compliant</span></span>
+          </div>
+          <div class="score-row">
+            <div class="score-icon blue-bg">⏱️</div>
+            <span class="score-lbl">Diagnostic Intake Time Saved</span>
+            <span class="score-val">&lt; 2 sec</span>
+          </div>
+          <div class="score-big">
+            <div class="score-big-num">93</div>
+            <div class="score-big-info">
+              <div class="label">Triage Confidence Score</div>
+              <div class="sub"><span class="risk-badge risk-amber"><span class="risk-dot"></span>Technician-Ready · Certified Routing</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS STRIP -->
+  <div class="stats-strip">
+    <div class="container">
+      <div class="stats-grid">
+        <div class="stat-blk">
+          <span class="stat-num">24.7%</span>
+          <div class="stat-txt">Surge in UK vehicle repair costs<br>since 2023 — 35% parts price hike</div>
+          <span class="stat-source">AXA / Motor Insurers Bureau 2024</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">23,000</span>
+          <div class="stat-txt">Technician vacancies in the UK<br>with only 2% ADAS-certified</div>
+          <span class="stat-source">IMI Skills Report 2024</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">£100B</span>
+          <div class="stat-txt">UK automotive aftercare market<br>serving 41.9M road users</div>
+          <span class="stat-source">SMMT / AIM Aftermarket 2024</span>
+        </div>
+        <div class="stat-blk">
+          <span class="stat-num">35%</span>
+          <div class="stat-txt">Diagnostic intake reduction target<br>through AI triage pre-booking</div>
+          <span class="stat-source">theautotriage Platform Projection</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOW IT WORKS -->
+  <section class="section-light">
+    <div class="container">
+      <div class="process-intro">
+        <div class="label-tag-blue">How It Works</div>
+        <h2 class="section-h2 dark">From Vague Driver Description to Technician-Ready Case File in Under 2 Seconds</h2>
+        <div class="section-divider divider-blue divider-center"></div>
+        <p class="para-light">Every theautotriage triage follows a precision four-stage diagnostic journey — from multimodal signal capture and AI-driven fault classification, to suitability-led routing and closed-loop outcome reconciliation — all without requiring technical knowledge from the vehicle owner, and without any additional hardware beyond a standard smartphone.</p>
+      </div>
+      <div class="process-grid">
+        <div class="process-card">
+          <div class="process-card-img">
+            <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="200" height="160" fill="#0B1D30"/>
+              <rect x="20" y="30" width="160" height="100" rx="12" fill="#0D2848" stroke="#F59E0B" stroke-width="1" stroke-opacity="0.4"/>
+              <!-- Smartphone -->
+              <rect x="80" y="20" width="40" height="70" rx="6" fill="#0A1E38" stroke="#F59E0B" stroke-width="1.5"/>
+              <rect x="84" y="28" width="32" height="45" rx="3" fill="#1650A0" fill-opacity="0.5"/>
+              <circle cx="100" cy="82" r="4" fill="#F59E0B" fill-opacity="0.5"/>
+              <!-- Sound waves -->
+              <path d="M60 60 Q70 50 80 60 Q70 70 60 60" fill="none" stroke="#F59E0B" stroke-width="1.5" opacity="0.7"/>
+              <path d="M50 55 Q65 40 80 55 Q65 70 50 55" fill="none" stroke="#F59E0B" stroke-width="1.2" opacity="0.5"/>
+              <path d="M40 50 Q60 30 80 50 Q60 70 40 50" fill="none" stroke="#F59E0B" stroke-width="1" opacity="0.3"/>
+              <!-- Camera icon -->
+              <rect x="110" y="45" width="30" height="22" rx="4" fill="#10335C" stroke="#4A8EE8" stroke-width="1"/>
+              <circle cx="125" cy="56" r="6" fill="none" stroke="#4A8EE8" stroke-width="1.2"/>
+              <circle cx="125" cy="56" r="3" fill="#4A8EE8" fill-opacity="0.5"/>
+              <text x="100" y="115" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace" opacity="0.8">SIGNAL CAPTURE</text>
+            </svg>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 01</div>
+            <h3>Capture &amp; Ingest</h3>
+            <p>Driver records engine audio clips, photographs dashboard warning lights, and submits a plain-language symptom description via the theautotriage smartphone interface. No OBD dongle or specialized hardware required — just a standard mobile device.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="200" height="160" fill="#0B1D30"/>
+              <!-- FFT waveform -->
+              <g opacity="0.8">
+                <line x1="20" y1="80" x2="180" y2="80" stroke="#375870" stroke-width="0.5"/>
+                <polyline points="20,80 35,65 45,75 55,45 65,72 75,38 85,68 95,30 105,65 115,48 125,72 135,55 145,75 155,62 165,78 180,80" fill="none" stroke="#F59E0B" stroke-width="2"/>
+                <!-- frequency bars -->
+                <rect x="25" y="95" width="8" height="25" rx="2" fill="#F59E0B" fill-opacity="0.7"/>
+                <rect x="37" y="100" width="8" height="20" rx="2" fill="#F59E0B" fill-opacity="0.6"/>
+                <rect x="49" y="88" width="8" height="32" rx="2" fill="#F59E0B" fill-opacity="0.9"/>
+                <rect x="61" y="105" width="8" height="15" rx="2" fill="#F59E0B" fill-opacity="0.5"/>
+                <rect x="73" y="92" width="8" height="28" rx="2" fill="#4A8EE8" fill-opacity="0.8"/>
+                <rect x="85" y="98" width="8" height="22" rx="2" fill="#F59E0B" fill-opacity="0.6"/>
+                <rect x="97" y="85" width="8" height="35" rx="2" fill="#4A8EE8" fill-opacity="0.7"/>
+                <rect x="109" y="102" width="8" height="18" rx="2" fill="#F59E0B" fill-opacity="0.5"/>
+              </g>
+              <!-- CNN grid -->
+              <rect x="135" y="25" width="50" height="50" rx="4" fill="#10335C" stroke="#4A8EE8" stroke-width="0.8" stroke-opacity="0.5"/>
+              <line x1="152" y1="25" x2="152" y2="75" stroke="#4A8EE8" stroke-width="0.5" opacity="0.4"/>
+              <line x1="169" y1="25" x2="169" y2="75" stroke="#4A8EE8" stroke-width="0.5" opacity="0.4"/>
+              <line x1="135" y1="42" x2="185" y2="42" stroke="#4A8EE8" stroke-width="0.5" opacity="0.4"/>
+              <line x1="135" y1="59" x2="185" y2="59" stroke="#4A8EE8" stroke-width="0.5" opacity="0.4"/>
+              <circle cx="152" cy="42" r="5" fill="#F59E0B" fill-opacity="0.6"/>
+              <circle cx="169" cy="59" r="4" fill="#4A8EE8" fill-opacity="0.6"/>
+              <text x="100" y="148" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace" opacity="0.8">FFT + CNN ANALYSIS</text>
+            </svg>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 02</div>
+            <h3>AI Triage &amp; Classify</h3>
+            <p>The Pre-Booking Uncertainty Compression Engine (PBUCE) applies Fast Fourier Transform analysis to isolate fault frequency signatures in audio, while Convolutional Neural Networks interpret visual evidence — producing a confidence-weighted fault probability map with sub-2-second latency.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="200" height="160" fill="#0B1D30"/>
+              <!-- Map nodes -->
+              <circle cx="100" cy="50" r="18" fill="#0D2848" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="100" y="55" text-anchor="middle" fill="#F59E0B" font-size="10" font-family="monospace">AI</text>
+              <!-- Garage nodes -->
+              <circle cx="40" cy="110" r="14" fill="#10335C" stroke="#4A8EE8" stroke-width="1.2"/>
+              <text x="40" y="115" text-anchor="middle" fill="#4A8EE8" font-size="8" font-family="monospace">EV</text>
+              <circle cx="100" cy="125" r="14" fill="#10335C" stroke="#34D399" stroke-width="1.2"/>
+              <text x="100" y="130" text-anchor="middle" fill="#34D399" font-size="7" font-family="monospace">ADAS</text>
+              <circle cx="160" cy="110" r="14" fill="#10335C" stroke="#F59E0B" stroke-width="1.2"/>
+              <text x="160" y="115" text-anchor="middle" fill="#F59E0B" font-size="8" font-family="monospace">GEN</text>
+              <!-- Lines -->
+              <line x1="100" y1="68" x2="40" y2="96" stroke="#4A8EE8" stroke-width="1.5" stroke-dasharray="4,2" opacity="0.6"/>
+              <line x1="100" y1="68" x2="100" y2="111" stroke="#34D399" stroke-width="2" opacity="0.8"/>
+              <line x1="100" y1="68" x2="160" y2="96" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,2" opacity="0.4"/>
+              <!-- Check on best match -->
+              <circle cx="100" cy="125" r="16" fill="none" stroke="#34D399" stroke-width="2" opacity="0.5"/>
+              <text x="100" y="148" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace" opacity="0.8">SUITABILITY ROUTING</text>
+            </svg>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 03</div>
+            <h3>Route &amp; Match</h3>
+            <p>The Repair Suitability Intelligence Matching Engine (RSIME) routes each inferred fault class exclusively to workshops holding verified IMI TechSafe certifications and specialist equipment for that specific repair — eliminating wasted trips to generalist garages unable to complete specialist EV or ADAS jobs.</p>
+          </div>
+        </div>
+        <div class="process-card">
+          <div class="process-card-img">
+            <svg viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="200" height="160" fill="#0B1D30"/>
+              <!-- Feedback loop arrow -->
+              <path d="M50 80 Q50 30 100 30 Q150 30 150 80 Q150 130 100 130 Q50 130 50 80" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="6,3" opacity="0.5"/>
+              <!-- Center -->
+              <circle cx="100" cy="80" r="28" fill="#0D2848" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="100" y="76" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace">RORLE</text>
+              <text x="100" y="88" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">LEARNING</text>
+              <!-- Arrow tip -->
+              <polygon points="50,72 40,80 50,88" fill="#F59E0B" opacity="0.7"/>
+              <!-- Data points -->
+              <circle cx="100" cy="28" r="5" fill="#34D399" opacity="0.8"/>
+              <circle cx="153" cy="80" r="5" fill="#4A8EE8" opacity="0.8"/>
+              <circle cx="100" cy="133" r="5" fill="#F59E0B" opacity="0.8"/>
+              <text x="100" y="155" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace" opacity="0.8">CLOSED-LOOP LEARNING</text>
+            </svg>
+          </div>
+          <div class="process-card-body">
+            <div class="step-tag">STEP 04</div>
+            <h3>Learn &amp; Improve</h3>
+            <p>The Repair Outcome Reconciliation Learning Engine (RORLE) reconciles every triage prediction against verified workshop invoices — treating each repair as a "feedback event" to continuously refine classification accuracy, building a proprietary UK vehicle failure-mode dataset impossible for generalist competitors to replicate.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CORE CAPABILITIES -->
+  <section class="section-dark">
+    <div class="container">
+      <div class="label-tag">Core Capabilities</div>
+      <h2 class="section-h2 white">Four Proprietary Engines. One Pre-Diagnostic Intelligence Layer.</h2>
+      <div class="section-divider divider-amber"></div>
+      <p class="para-dark platform-sub">theautotriage combines four proprietary AI engines into a single pre-diagnostic infrastructure stack — the only platform in the UK that unifies multimodal signal processing, uncertainty compression, suitability-led routing, and closed-loop outcome learning into one Technician-Ready case file generation system for the automotive aftercare sector.</p>
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <rect x="0" y="0" width="300" height="170" fill="url(#grad1)"/>
+              <defs><linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0D2848;stop-opacity:0.8"/><stop offset="100%" style="stop-color:#071422;stop-opacity:0.9"/></linearGradient></defs>
+              <!-- Waveform -->
+              <polyline points="10,85 30,70 45,90 60,50 75,80 90,35 105,75 120,55 135,80 150,45 165,72 180,60 195,78 210,65 225,82 240,70 260,85 280,75 300,85" fill="none" stroke="#F59E0B" stroke-width="2.5" opacity="0.9"/>
+              <polyline points="10,85 30,70 45,90 60,50 75,80 90,35 105,75 120,55 135,80 150,45 165,72 180,60 195,78 210,65 225,82 240,70 260,85 280,75 300,85" fill="none" stroke="#FCD34D" stroke-width="1" opacity="0.4"/>
+              <!-- Frequency markers -->
+              <line x1="90" y1="20" x2="90" y2="150" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3" opacity="0.3"/>
+              <text x="95" y="35" fill="#F59E0B" font-size="9" font-family="monospace" opacity="0.8">ROD KNOCK</text>
+              <text x="10" y="160" fill="#8AAFCC" font-size="8" font-family="monospace" opacity="0.6">FFT ACOUSTIC FINGERPRINT ANALYSIS</text>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 01</div>
+            <h3>PBUCE — Uncertainty Compression Engine</h3>
+            <p>Applies Fast Fourier Transform (FFT) spectral analysis to audio recordings of engine anomalies, identifying frequency signatures that distinguish benign noises (loose heat shields) from catastrophic failure modes (rod knock, bearing collapse) with sub-2-second latency via Edge AI on standard smartphones.</p>
+            <div class="more-text">The PBUCE maps noisy acoustic data against a proprietary library of historical UK vehicle failure-mode patterns, producing a confidence-weighted probability distribution (e.g., 78% sensor fault, 22% wiring harness) rather than a single binary diagnosis. This "uncertainty compression" manages consumer expectations before physical inspection, preventing unnecessary garage visits and write-off risk for insurers.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0D2848;stop-opacity:0.7"/><stop offset="100%" style="stop-color:#071422;stop-opacity:0.9"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#grad2)"/>
+              <!-- CNN Grid pattern -->
+              <rect x="30" y="20" width="240" height="130" rx="6" fill="none" stroke="#4A8EE8" stroke-width="0.5" opacity="0.3"/>
+              <g opacity="0.5" stroke="#4A8EE8" stroke-width="0.5">
+                <line x1="90" y1="20" x2="90" y2="150"/><line x1="150" y1="20" x2="150" y2="150"/><line x1="210" y1="20" x2="210" y2="150"/>
+                <line x1="30" y1="63" x2="270" y2="63"/><line x1="30" y1="106" x2="270" y2="106"/>
+              </g>
+              <!-- Highlighted cells -->
+              <rect x="90" y="63" width="60" height="43" rx="3" fill="#F59E0B" fill-opacity="0.15" stroke="#F59E0B" stroke-width="1"/>
+              <rect x="150" y="20" width="60" height="43" rx="3" fill="#4A8EE8" fill-opacity="0.1" stroke="#4A8EE8" stroke-width="0.8"/>
+              <!-- Warning light symbols -->
+              <circle cx="120" cy="84" r="12" fill="none" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="120" y="89" text-anchor="middle" fill="#F59E0B" font-size="12">!</text>
+              <circle cx="180" cy="41" r="10" fill="none" stroke="#4A8EE8" stroke-width="1.2"/>
+              <text x="180" y="46" text-anchor="middle" fill="#4A8EE8" font-size="10">⚡</text>
+              <text x="150" y="165" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace" opacity="0.6">CNN VISUAL FAULT CLASSIFICATION</text>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 02</div>
+            <h3>MCWTL — Multimodal Translation Layer</h3>
+            <p>Convolutional Neural Networks (CNNs) interpret dashboard warning-light imagery and vehicle fault photographs while NLP semantic transformation converts vague driver descriptions (e.g., "shaking at high speed") into standardized technical case objects (e.g., "Potential warped front brake discs; frequency-matched acoustic signature; safe to drive &lt;40mph").</p>
+            <div class="more-text">The MCWTL is the critical communication bridge that addresses the UK's fundamental information asymmetry between non-technical drivers and specialized technicians. By producing structured, standardized "Technician-Ready" case files, it slashes diagnostic intake time by a targeted 35%, directly addressing the 23,000-vacancy technician crisis by reducing the cognitive load on workshop staff during initial vehicle assessment.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="grad3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#071422;stop-opacity:0.9"/><stop offset="100%" style="stop-color:#0D2848;stop-opacity:0.7"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#grad3)"/>
+              <!-- UK Map simplified -->
+              <ellipse cx="150" cy="75" rx="55" ry="65" fill="none" stroke="#375870" stroke-width="1" opacity="0.5"/>
+              <!-- Garage location pins -->
+              <circle cx="130" cy="60" r="8" fill="#0D2848" stroke="#4A8EE8" stroke-width="1.5"/>
+              <line x1="130" y1="68" x2="130" y2="80" stroke="#4A8EE8" stroke-width="1.5"/>
+              <circle cx="170" cy="80" r="8" fill="#0D2848" stroke="#34D399" stroke-width="1.5"/>
+              <line x1="170" y1="88" x2="170" y2="100" stroke="#34D399" stroke-width="1.5"/>
+              <circle cx="145" cy="100" r="8" fill="#0D2848" stroke="#F59E0B" stroke-width="2"/>
+              <line x1="145" y1="108" x2="145" y2="120" stroke="#F59E0B" stroke-width="2"/>
+              <!-- Selection glow -->
+              <circle cx="145" cy="100" r="14" fill="none" stroke="#F59E0B" stroke-width="1" opacity="0.4"/>
+              <circle cx="145" cy="100" r="20" fill="none" stroke="#F59E0B" stroke-width="0.6" opacity="0.2"/>
+              <!-- Cert badges -->
+              <rect x="20" y="30" width="55" height="22" rx="4" fill="#10335C" stroke="#4A8EE8" stroke-width="0.8"/>
+              <text x="47" y="44" text-anchor="middle" fill="#4A8EE8" font-size="8" font-family="monospace">IMI EV L4</text>
+              <rect x="225" y="55" width="60" height="22" rx="4" fill="#1A3010" stroke="#34D399" stroke-width="0.8"/>
+              <text x="255" y="69" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">ADAS CERT</text>
+              <text x="150" y="165" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace" opacity="0.6">RSIME SUITABILITY ROUTING ENGINE</text>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Engine 03</div>
+            <h3>RSIME — Suitability Routing Engine</h3>
+            <p>In a market where only 22% of UK technicians are EV-qualified and merely 2% hold ADAS calibration certification, RSIME routes each inferred fault class exclusively to workshops with verified IMI TechSafe credentials — ensuring high-voltage battery, ADAS sensor, and composite structural repairs reach only the workshops equipped and certified to complete them.</p>
+            <div class="more-text">Unlike proximity-based booking platforms, RSIME performs technical alignment matching — cross-referencing fault class probability against a live database of workshop certifications, equipment inventories, and bay availability. This eliminates the diagnostic bottleneck where vehicles are booked into generalist garages unable to legally or technically complete specialist EV or ADAS repairs, preventing extended vehicle downtime and insurer-forced write-offs.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Learn More ↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div><!-- end page home -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: ABOUT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-about">
+  <section class="about-hero">
+    <div class="container">
+      <div class="about-grid">
+        <div>
+          <div class="label-tag">Our Mission</div>
+          <h2 class="section-h2 amber">Automotive Pre-Diagnostic Intelligence Built from Engineering Reality</h2>
+          <div class="section-divider divider-amber"></div>
+          <p class="about-para">theautotriage was born from a critical, observed failure: UK vehicle owners navigate a £100 billion repair market without any standardized method to communicate symptoms, assess urgency, or verify that their local garage possesses the technical qualifications to complete their specific repair — leading to diagnostic waste, repair inflation, and costly insurer write-offs.</p>
+          <p class="about-para">Our platform operates as a critical infrastructure layer upstream of the repair event — transforming unstructured consumer evidence (engine audio, dashboard imagery, plain-language descriptions) into "Technician-Ready" diagnostic case files using advanced signal processing and AI, and routing those cases to certified specialists via our suitability intelligence engine.</p>
+          <p class="about-para">Founded by Mandar Kasture (MSc Automotive Engineering, Cranfield University; Quality Inspector at BMW Mini) and Rohit Patil (PG Diploma International Business, Oxford Brookes; Operations at M&S), theautotriage is elite engineering pedigree encoded into a scalable, hardware-free AI platform — built specifically for the UK's £100 billion automotive aftercare sector and the 41.9 million road users who depend on it.</p>
+          <div class="about-tags">
+            <div class="feature-tag">PBUCE Uncertainty Compression</div>
+            <div class="feature-tag">FFT Acoustic Fingerprinting</div>
+            <div class="feature-tag">CNN Visual Fault Classification</div>
+            <div class="feature-tag">RSIME Suitability Routing</div>
+            <div class="feature-tag">RORLE Closed-Loop Learning</div>
+            <div class="feature-tag">DVSA MOT History API Integration</div>
+            <div class="feature-tag">UK GDPR · Privacy by Design</div>
+            <div class="feature-tag">IMI TechSafe · FCA Consumer Duty</div>
+          </div>
+        </div>
+        <div>
+          <div class="founder-card">
+            <div class="founder-tag">Co-Founder &amp; Technical Lead</div>
+            <h4>Mandar Kasture</h4>
+            <div class="founder-title">MSc Automotive Engineering, Cranfield University · Quality Inspector, BMW Mini</div>
+            <p>Mandar's deep expertise in powertrain simulation, vehicle structures, and quality assurance at BMW Mini provides the engineering foundation for theautotriage's diagnostic logic. He designed the PBUCE Uncertainty Compression Engine utilizing his expertise in Garrett Level 4 turbocharger systems and powertrain failure-mode analysis — ensuring the AI is grounded in industrial engineering reality, not academic abstraction.</p>
+            <p>His research in composite crash tubes, EV chassis design, and structural fault inference directly powers theautotriage's EV battery health and ADAS calibration modules — creating a technical moat that generalist tech competitors cannot replicate without equivalent automotive engineering depth.</p>
+            <button class="btn-primary" onclick="showPage('contact')">
+              Contact Founders →
+            </button>
+          </div>
+
+          <div class="founder-card">
+            <div class="founder-tag">Co-Founder &amp; Operations Lead</div>
+            <h4>Rohit Patil</h4>
+            <div class="founder-title">PG Diploma International Business, Oxford Brookes · Operations Management, Marks &amp; Spencer</div>
+            <p>Rohit's operational expertise managing high-pressure supply chains and complex vendor relationships at Marks &amp; Spencer is critical for scaling theautotriage's infrastructure across the UK's 40,000+ independent garages. He leads the RSIME routing engine optimization, garage network partnerships, and the development of the platform's business-to-business commercial strategy.</p>
+            <p>Directing customer acquisition via Account-Based Marketing (ABM) and ensuring FCA Consumer Duty compliance for financial transparency, Rohit manages relationships with the Independent Garage Association (IGA), motor insurers, and fleet operators — building the institutional distribution network that transforms theautotriage from a product into a national automotive trust layer.</p>
+            <button class="btn-blue" onclick="showPage('market')">
+              View Market Opportunity →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- end page about -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PLATFORM
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-platform">
+  <section class="section-dark" style="padding-top:clamp(80px,12vw,120px);">
+    <div class="container">
+      <div class="label-tag">The Platform</div>
+      <h2 class="section-h2 white">Every Layer of theautotriage's Pre-Diagnostic Intelligence Stack</h2>
+      <div class="section-divider divider-amber"></div>
+      <p class="para-dark platform-sub">theautotriage is a cloud-native B2B SaaS and API licensing platform built on a modular AI architecture — Edge AI smartphone inference, FastAPI diagnostic workflow backend, DVSA MOT History API integration, and UK GDPR-compliant cloud infrastructure — designed to serve independent garages, motor insurers, fleet operators, and private motorists without requiring specialized hardware or technical expertise.</p>
+
+      <div class="kpi-row">
+        <div class="kpi-card">
+          <div class="kpi-num">&lt;2sec</div>
+          <div class="kpi-lbl">Triage latency · Edge AI inference</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">90%+</div>
+          <div class="kpi-lbl">Classification accuracy · powertrain & brake faults</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">35%</div>
+          <div class="kpi-lbl">Diagnostic intake reduction target</div>
+        </div>
+        <div class="kpi-card">
+          <div class="kpi-num">TRL 7</div>
+          <div class="kpi-lbl">Current tech readiness · validated prototype</div>
+        </div>
+      </div>
+
+      <div class="platform-grid">
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="pg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#0D2848;stop-opacity:0.8"/><stop offset="100%" style="stop-color:#071422"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#pg1)"/>
+              <rect x="30" y="20" width="80" height="55" rx="8" fill="#0A1E38" stroke="#F59E0B" stroke-width="1.2"/>
+              <text x="70" y="50" text-anchor="middle" fill="#F59E0B" font-size="20">🎙️</text>
+              <rect x="130" y="20" width="80" height="55" rx="8" fill="#0A1E38" stroke="#4A8EE8" stroke-width="1.2"/>
+              <text x="170" y="50" text-anchor="middle" fill="#4A8EE8" font-size="20">📷</text>
+              <rect x="80" y="90" width="140" height="55" rx="8" fill="#0A1E38" stroke="#34D399" stroke-width="1.2"/>
+              <text x="150" y="115" text-anchor="middle" fill="#34D399" font-size="10" font-family="monospace">TECHNICIAN-READY</text>
+              <text x="150" y="130" text-anchor="middle" fill="#34D399" font-size="9" font-family="monospace">CASE FILE</text>
+              <line x1="70" y1="75" x2="150" y2="90" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+              <line x1="170" y1="75" x2="150" y2="90" stroke="#4A8EE8" stroke-width="1" stroke-dasharray="3,2" opacity="0.6"/>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 01</div>
+            <h3>Multimodal Signal Ingestion</h3>
+            <p>Capture engine audio clips (WAV/MP3), dashboard warning-light photographs, high-resolution fault imagery, and plain-language symptom narratives via the theautotriage smartphone interface — no OBD dongle, no proprietary sensor hardware, no mechanical literacy required from the vehicle owner.</p>
+            <div class="more-text">Edge AI performs localized preprocessing on-device, ensuring sensitive vehicle data never leaves the user's smartphone until encrypted transmission to the PBUCE inference backend. Automated media quality checks prompt re-capture if audio SNR is insufficient or image resolution fails CNN minimum thresholds — preventing low-quality inputs from degrading classification accuracy downstream.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="pg2" x1="100%" y1="0%" x2="0%" y2="100%"><stop offset="0%" style="stop-color:#0D2848;stop-opacity:0.8"/><stop offset="100%" style="stop-color:#071422"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#pg2)"/>
+              <!-- FFT Spectrum -->
+              <g>
+                <rect x="20" y="120" width="12" height="30" rx="2" fill="#F59E0B" fill-opacity="0.5"/>
+                <rect x="36" y="100" width="12" height="50" rx="2" fill="#F59E0B" fill-opacity="0.7"/>
+                <rect x="52" y="80" width="12" height="70" rx="2" fill="#F59E0B" fill-opacity="0.9"/>
+                <rect x="68" y="105" width="12" height="45" rx="2" fill="#F59E0B" fill-opacity="0.6"/>
+                <rect x="84" y="90" width="12" height="60" rx="2" fill="#4A8EE8" fill-opacity="0.8"/>
+                <rect x="100" y="70" width="12" height="80" rx="2" fill="#4A8EE8" fill-opacity="0.9"/>
+                <rect x="116" y="95" width="12" height="55" rx="2" fill="#F59E0B" fill-opacity="0.7"/>
+                <rect x="132" y="110" width="12" height="40" rx="2" fill="#F59E0B" fill-opacity="0.5"/>
+              </g>
+              <!-- Annotation box -->
+              <rect x="155" y="30" width="125" height="80" rx="6" fill="#0A1E38" stroke="#F59E0B" stroke-width="1"/>
+              <text x="217" y="52" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace">ROD KNOCK</text>
+              <text x="217" y="66" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">Confidence: 82%</text>
+              <text x="217" y="80" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">SENSOR FAULT</text>
+              <text x="217" y="94" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">Confidence: 14%</text>
+              <line x1="108" y1="70" x2="155" y2="60" stroke="#F59E0B" stroke-width="0.8" stroke-dasharray="3,2" opacity="0.5"/>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 02</div>
+            <h3>PBUCE — FFT Acoustic Analysis</h3>
+            <p>Fast Fourier Transform spectral decomposition identifies fault-specific frequency signatures in engine audio with millisecond precision — distinguishing between a loose heat shield (benign rattling harmonics), rod knock (catastrophic low-frequency impact signature), and bearing wear (progressive high-frequency sweep pattern) before the vehicle ever reaches a workshop bay.</p>
+            <div class="more-text">The PBUCE operates on a probabilistic inference model trained on thousands of verified UK vehicle powertrain failure events, producing a confidence-weighted distribution across fault classes rather than a single deterministic diagnosis. This "uncertainty compression" gives motorists actionable cost banding and urgency scoring while providing technicians with a structured, frequency-annotated acoustic profile that replaces the ambiguous verbal description — reducing diagnostic intake time by a targeted 35%.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="pg3" x1="0%" y1="100%" x2="100%" y2="0%"><stop offset="0%" style="stop-color:#071422"/><stop offset="100%" style="stop-color:#0D2848;stop-opacity:0.8"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#pg3)"/>
+              <!-- CNN layers visualization -->
+              <g opacity="0.8">
+                <!-- Layer 1 -->
+                <rect x="20" y="25" width="35" height="120" rx="3" fill="#10335C" stroke="#4A8EE8" stroke-width="0.8"/>
+                <rect x="22" y="30" width="31" height="18" rx="1" fill="#4A8EE8" fill-opacity="0.3"/>
+                <rect x="22" y="52" width="31" height="18" rx="1" fill="#4A8EE8" fill-opacity="0.2"/>
+                <rect x="22" y="74" width="31" height="18" rx="1" fill="#F59E0B" fill-opacity="0.4"/>
+                <rect x="22" y="96" width="31" height="18" rx="1" fill="#4A8EE8" fill-opacity="0.2"/>
+                <!-- Layer 2 -->
+                <rect x="70" y="40" width="30" height="90" rx="3" fill="#10335C" stroke="#4A8EE8" stroke-width="0.8"/>
+                <rect x="72" y="45" width="26" height="15" rx="1" fill="#F59E0B" fill-opacity="0.4"/>
+                <rect x="72" y="64" width="26" height="15" rx="1" fill="#4A8EE8" fill-opacity="0.3"/>
+                <rect x="72" y="83" width="26" height="15" rx="1" fill="#F59E0B" fill-opacity="0.5"/>
+                <!-- Layer 3 -->
+                <rect x="115" y="55" width="25" height="60" rx="3" fill="#10335C" stroke="#F59E0B" stroke-width="1"/>
+                <rect x="117" y="60" width="21" height="12" rx="1" fill="#F59E0B" fill-opacity="0.6"/>
+                <rect x="117" y="76" width="21" height="12" rx="1" fill="#F59E0B" fill-opacity="0.3"/>
+                <!-- Output -->
+                <rect x="155" y="40" width="120" height="90" rx="6" fill="#0A1E38" stroke="#F59E0B" stroke-width="1"/>
+                <text x="215" y="62" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace">⚠️ CHECK ENGINE</text>
+                <text x="215" y="78" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">WARPED DISCS: 78%</text>
+                <text x="215" y="93" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">CALIPER FAULT: 18%</text>
+                <text x="215" y="108" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">SENSOR ERR: 4%</text>
+                <!-- Connection arrows -->
+                <line x1="55" y1="85" x2="70" y2="85" stroke="#4A8EE8" stroke-width="1" stroke-dasharray="2,1"/>
+                <line x1="100" y1="85" x2="115" y2="85" stroke="#4A8EE8" stroke-width="1" stroke-dasharray="2,1"/>
+                <line x1="140" y1="85" x2="155" y2="85" stroke="#F59E0B" stroke-width="1.2"/>
+              </g>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 03</div>
+            <h3>CNN Visual Fault Classifier</h3>
+            <p>Convolutional Neural Network image processing analyzes dashboard warning light photographs, engine bay imagery, and visual fault evidence to identify fault signatures, severity indicators, and urgency classifications — providing the visual intelligence layer that complements the PBUCE acoustic analysis in a fully multimodal triage assessment.</p>
+            <div class="more-text">The CNN model is trained on a curated dataset of verified UK vehicle fault imagery spanning powertrain warning lights, fluid contamination patterns, structural damage signatures, and EV battery health indicators. Combined with natural language processing of driver symptom descriptions via the MCWTL semantic transformation layer, the integrated multimodal output produces a single, unified "Technician-Ready" case file — standardizing the quality of pre-booking information arriving at the workshop and eliminating the diagnostic intake inefficiency that costs the UK garage sector millions of hours annually.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="pg4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#10335C;stop-opacity:0.6"/><stop offset="100%" style="stop-color:#071422"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#pg4)"/>
+              <!-- Certification badges -->
+              <rect x="20" y="20" width="90" height="38" rx="6" fill="#0A1E38" stroke="#4A8EE8" stroke-width="1.2"/>
+              <text x="65" y="36" text-anchor="middle" fill="#4A8EE8" font-size="9" font-family="monospace">IMI EV LEVEL 4</text>
+              <text x="65" y="50" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">CERTIFIED ✓</text>
+              <rect x="125" y="20" width="90" height="38" rx="6" fill="#0A1E38" stroke="#34D399" stroke-width="1.2"/>
+              <text x="170" y="36" text-anchor="middle" fill="#34D399" font-size="9" font-family="monospace">ADAS CALIBRATION</text>
+              <text x="170" y="50" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">TECHSAFE ✓</text>
+              <rect x="220" y="20" width="65" height="38" rx="6" fill="#0A1E38" stroke="#F59E0B" stroke-width="1.2"/>
+              <text x="252" y="36" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace">GENERAL</text>
+              <text x="252" y="50" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">VERIFIED ✓</text>
+              <!-- Routing arrows down -->
+              <line x1="65" y1="58" x2="65" y2="90" stroke="#4A8EE8" stroke-width="1.5"/>
+              <line x1="170" y1="58" x2="140" y2="90" stroke="#34D399" stroke-width="1.5"/>
+              <!-- Fault box -->
+              <rect x="30" y="90" width="230" height="50" rx="6" fill="#0D2848" stroke="#F59E0B" stroke-width="1"/>
+              <text x="145" y="112" text-anchor="middle" fill="#F59E0B" font-size="9" font-family="monospace">HIGH-VOLTAGE BATTERY FAULT</text>
+              <text x="145" y="128" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">→ ROUTED TO: IMI EV L4 WORKSHOP ONLY</text>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 04</div>
+            <h3>RSIME — Suitability Routing Intelligence</h3>
+            <p>Cross-references each inferred fault class against a live registry of workshop certifications, equipment inventories, and IMI TechSafe accreditation levels — routing high-voltage battery, ADAS calibration, and composite structural repairs exclusively to the verified specialist facilities equipped to legally and technically complete that specific repair class.</p>
+            <div class="more-text">RSIME directly addresses the UK's most critical systemic failure: vehicles booked into generalist garages that lack the legal authorization or specialist tooling to complete EV or ADAS repairs — resulting in extended downtime, wasted diagnostic labor, and insurer-forced write-offs that cost the UK economy hundreds of millions annually. By routing based on technical suitability rather than proximity or price, RSIME protects both motorists and garages from the diagnostic bottleneck — and enables the UK's independent garage sector to capitalize on the EV transition rather than being bypassed by it.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <!-- Circular feedback loop -->
+              <circle cx="150" cy="85" r="55" fill="none" stroke="#F59E0B" stroke-width="1.5" stroke-dasharray="8,4" opacity="0.4"/>
+              <circle cx="150" cy="85" r="35" fill="#0D2848" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="150" y="80" text-anchor="middle" fill="#F59E0B" font-size="10" font-family="monospace">RORLE</text>
+              <text x="150" y="95" text-anchor="middle" fill="#8AAFCC" font-size="8" font-family="monospace">LEARNING</text>
+              <!-- Data flow points -->
+              <circle cx="150" cy="30" r="10" fill="#10335C" stroke="#34D399" stroke-width="1.5"/>
+              <text x="150" y="34" text-anchor="middle" fill="#34D399" font-size="8">📊</text>
+              <circle cx="205" cy="85" r="10" fill="#10335C" stroke="#4A8EE8" stroke-width="1.5"/>
+              <text x="205" y="89" text-anchor="middle" fill="#4A8EE8" font-size="8">🔧</text>
+              <circle cx="150" cy="140" r="10" fill="#10335C" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="150" y="144" text-anchor="middle" fill="#F59E0B" font-size="8">📋</text>
+              <circle cx="95" cy="85" r="10" fill="#10335C" stroke="#34D399" stroke-width="1.5"/>
+              <text x="95" y="89" text-anchor="middle" fill="#34D399" font-size="8">🔄</text>
+              <!-- Arrows on loop -->
+              <polygon points="160,30 150,22 140,30" fill="#34D399" opacity="0.7"/>
+              <polygon points="205,75 213,85 205,95" fill="#4A8EE8" opacity="0.7"/>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 05</div>
+            <h3>RORLE — Closed-Loop Learning Engine</h3>
+            <p>Every completed repair generates a "feedback event" — the RORLE reconciles theautotriage's initial triage prediction against the verified workshop invoice (actual parts replaced, labor hours, final diagnosis), continuously refining classification accuracy and cost prediction models with outcome-linked ground truth data from the UK vehicle parc.</p>
+            <div class="more-text">This closed-loop architecture creates a proprietary "data moat" of verified UK vehicle failure modes — a dataset that grows in precision and coverage with every repair event processed through the platform. Unlike generalist AI tools trained on publicly available data, the RORLE's training corpus consists exclusively of outcome-verified automotive cases from the UK market, creating classification intelligence that is technically impossible for competitors to replicate without the same institutional garage partnerships and outcome-tracking infrastructure. By Year 3, the target dataset exceeds 500,000 verified failure mode events — establishing theautotriage as the definitive UK automotive intelligence layer.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+        <div class="platform-card">
+          <div class="platform-card-img">
+            <svg viewBox="0 0 300 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:100%;position:absolute;inset:0;">
+              <rect width="300" height="170" fill="#071422"/>
+              <defs><linearGradient id="pg6" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" style="stop-color:#071422"/><stop offset="100%" style="stop-color:#0D2848;stop-opacity:0.7"/></linearGradient></defs>
+              <rect width="300" height="170" fill="url(#pg6)"/>
+              <!-- DVSA badge -->
+              <rect x="20" y="20" width="80" height="40" rx="6" fill="#0A1E38" stroke="#F59E0B" stroke-width="1.2"/>
+              <text x="60" y="38" text-anchor="middle" fill="#F59E0B" font-size="8" font-family="monospace">DVSA MOT API</text>
+              <text x="60" y="52" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">INTEGRATED ✓</text>
+              <!-- GDPR badge -->
+              <rect x="115" y="20" width="80" height="40" rx="6" fill="#0A1E38" stroke="#34D399" stroke-width="1.2"/>
+              <text x="155" y="38" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">UK GDPR</text>
+              <text x="155" y="52" text-anchor="middle" fill="#34D399" font-size="8" font-family="monospace">PRIVACY-BY-DESIGN</text>
+              <!-- FCA badge -->
+              <rect x="210" y="20" width="75" height="40" rx="6" fill="#0A1E38" stroke="#4A8EE8" stroke-width="1.2"/>
+              <text x="247" y="38" text-anchor="middle" fill="#4A8EE8" font-size="8" font-family="monospace">FCA DUTY</text>
+              <text x="247" y="52" text-anchor="middle" fill="#4A8EE8" font-size="8" font-family="monospace">COMPLIANT ✓</text>
+              <!-- Shield icon -->
+              <path d="M130 80 L150 72 L170 80 L170 105 Q150 115 130 105 Z" fill="#0D2848" stroke="#F59E0B" stroke-width="1.5"/>
+              <text x="150" y="97" text-anchor="middle" fill="#F59E0B" font-size="14">🛡️</text>
+              <text x="150" y="140" text-anchor="middle" fill="#8AAFCC" font-size="9" font-family="monospace">COMPLIANCE &amp; TRUST LAYER</text>
+            </svg>
+          </div>
+          <div class="inner">
+            <div class="element-badge">Module 06</div>
+            <h3>Compliance &amp; Trust Infrastructure</h3>
+            <p>Direct integration with the official DVSA MOT History API enriches each triage case with the vehicle's verified roadworthiness record and historical failure data. "Privacy-by-Design" Edge AI architecture ensures sensitive vehicle and user data is processed locally before encrypted transmission — achieving full UK GDPR compliance and FCA Consumer Duty standards for financial transparency.</p>
+            <div class="more-text">Confidence-Based Cost Banding provides motorists with transparent, range-based repair cost estimates derived from verified UK garage pricing data — eliminating "sticker shock" and empowering the 76% of drivers who struggle with unexpected repair bills to make informed financial decisions before committing to a garage booking. UKCA software marking compliance and ISO/IEC 27001 data security standards provide institutional stakeholders (motor insurers, fleet operators, NHS fleet managers) with the audit-ready compliance documentation required for enterprise adoption and regulatory alignment with the UK's 2035 ZEV mandate framework.</div>
+            <button class="expand-btn" onclick="toggleCard(this)">Expand ↓</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- end page platform -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: MARKET
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-market">
+  <section class="section-dark" style="padding-top:clamp(80px,12vw,120px);">
+    <div class="container">
+      <div class="label-tag">Market Analysis</div>
+      <h2 class="section-h2 white">A £100B Market. 41.9M Road Users. Zero Direct Pre-Diagnostic Competition.</h2>
+      <div class="section-divider divider-amber"></div>
+      <p class="para-dark" style="max-width:700px;margin-bottom:40px;">The UK automotive aftercare sector presents a structurally urgent market opportunity for theautotriage. With 41.9 million licensed road users, 40,000+ independent garages, a record 24.7% repair cost surge, and a 23,000-technician vacancy crisis — all coinciding with the government's 2035 ZEV mandate forcing rapid EV adoption — the demand for pre-diagnostic intelligence has never been greater, and no existing platform addresses it.</p>
+
+      <div class="market-kpi">
+        <div class="mkt-card">
+          <div class="mkt-num">£288M+</div>
+          <div class="mkt-lbl">Identified institutional TAM across independent garages, motor insurers, and fleet operators — pre-revenue pipeline confirmed through Oxford Regional Pilot engagement</div>
+          <div class="mkt-source">theautotriage Market Validation 2025</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">£11.7bn</div>
+          <div class="mkt-lbl">Annual UK motor insurance claims payout — driven by unnecessary write-offs that pre-diagnostic intelligence prevents through early certainty-of-repair assessment</div>
+          <div class="mkt-source">ABI Motor Insurance Data 2024</div>
+        </div>
+        <div class="mkt-card">
+          <div class="mkt-num">40,000+</div>
+          <div class="mkt-lbl">Independent UK garages — the primary institutional customer base, serving the 70% of UK drivers who prefer independent workshops over franchised dealerships</div>
+          <div class="mkt-source">IMI / IGA Industry Census 2024</div>
+        </div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">UK Repair Cost Surge by Vehicle Type</div>
+          <div class="chart-sub">Average repair cost increase 2023–2024 by category (%)</div>
+          <div class="chart-wrap"><canvas id="chartSector"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">Root Causes of Diagnostic Failure</div>
+          <div class="chart-sub">Primary drivers of wasted garage intake and write-offs</div>
+          <div class="chart-wrap"><canvas id="chartRootCause"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card-full">
+        <div class="chart-title">Competitive Positioning — UK Automotive Pre-Diagnostic Landscape</div>
+        <div class="chart-sub">theautotriage vs. existing platform categories across key capability dimensions</div>
+        <div class="chart-wrap-lg"><canvas id="chartRadar"></canvas></div>
+      </div>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <div class="chart-title">UK Automotive AI & Aftercare Market Growth</div>
+          <div class="chart-sub">Market expansion trajectory — aftercare AI investment (£ Billion)</div>
+          <div class="chart-wrap"><canvas id="chartGrowth"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <div class="chart-title">theautotriage vs Competitors — Capability Score</div>
+          <div class="chart-sub">Feature coverage comparison across pre-diagnostic intelligence dimensions</div>
+          <div class="chart-wrap"><canvas id="chartPerf"></canvas></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- end page market -->
+
+
+<!-- ═══════════════════════════════════════════
+     PAGE: PRICING
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-pricing">
+  <section style="background:var(--bg-black);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="label-tag">Pricing Plans</div>
+      <h2 class="section-h2 amber">Enterprise-Grade Pre-Diagnostic Intelligence at Accessible Pricing</h2>
+      <div class="section-divider divider-amber"></div>
+      <p class="para-dark" style="max-width:640px;margin-bottom:48px;">Three subscription tiers designed for independent garages, motor insurers, and fleet operators at every scale. All plans include the full theautotriage triage intelligence stack — multimodal signal capture, PBUCE fault classification, RSIME suitability routing, and RORLE closed-loop learning. No hardware required. No specialist IT infrastructure needed.</p>
+
+      <div class="pricing-grid">
+        <div class="price-card">
+          <div class="price-tier">Garage Starter</div>
+          <h3>Independent</h3>
+          <p class="desc">For independent garages and sole-trader mechanics seeking structured pre-booking intelligence to reduce diagnostic intake waste and improve booking quality.</p>
+          <span class="price-amount">£89</span>
+          <div class="price-period">/ MONTH · BILLED MONTHLY</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Multimodal triage case creation</li>
+            <li><span class="chk">✓</span> Audio FFT &amp; visual CNN analysis</li>
+            <li><span class="chk">✓</span> Technician-Ready case file output</li>
+            <li><span class="chk">✓</span> Basic RSIME routing recommendations</li>
+            <li><span class="chk">✓</span> DVSA MOT history enrichment</li>
+            <li><span class="chk">✓</span> Consumer cost banding output</li>
+            <li><span class="chk">✓</span> Up to 3 workshop users</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Get Started</button>
+        </div>
+
+        <div class="price-card featured">
+          <div class="price-tier">Growth Plan</div>
+          <h3>Professional</h3>
+          <p class="desc">For established garages and regional networks requiring full RORLE learning integration, advanced EV/ADAS routing, and fleet operator API connectivity.</p>
+          <span class="price-amount">£249</span>
+          <div class="price-period">/ MONTH · BILLED MONTHLY</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Full PBUCE uncertainty compression</li>
+            <li><span class="chk">✓</span> Advanced RSIME EV/ADAS routing</li>
+            <li><span class="chk">✓</span> RORLE closed-loop learning access</li>
+            <li><span class="chk">✓</span> Real-time outcome reconciliation</li>
+            <li><span class="chk">✓</span> IMI TechSafe certification registry</li>
+            <li><span class="chk">✓</span> Fleet booking API integration</li>
+            <li><span class="chk">✓</span> Up to 15 users &amp; multi-bay dashboard</li>
+          </ul>
+          <button class="price-btn price-btn-amber" onclick="showPage('contact')">Start Free Pilot</button>
+        </div>
+
+        <div class="price-card">
+          <div class="price-tier">Enterprise</div>
+          <h3>Institutional</h3>
+          <p class="desc">For motor insurers, fleet operators, and national garage groups integrating theautotriage as an API-first pre-diagnostic infrastructure layer across portfolios.</p>
+          <span class="price-amount">£699</span>
+          <div class="price-period">/ MONTH · CUSTOM API PRICING</div>
+          <div class="price-divider"></div>
+          <ul class="price-features">
+            <li><span class="chk">✓</span> Full API &amp; SDK licensing access</li>
+            <li><span class="chk">✓</span> Insurance FNOL portal integration</li>
+            <li><span class="chk">✓</span> Fleet telematics data connectors</li>
+            <li><span class="chk">✓</span> White-label triage case output</li>
+            <li><span class="chk">✓</span> Advanced analytics &amp; claims dashboard</li>
+            <li><span class="chk">✓</span> Dedicated onboarding &amp; SLA support</li>
+            <li><span class="chk">✓</span> Unlimited users &amp; SSO enterprise auth</li>
+          </ul>
+          <button class="price-btn price-btn-outline" onclick="showPage('contact')">Contact Sales</button>
+        </div>
+      </div>
+
+      <!-- FAQ -->
+      <div class="label-tag">FAQ</div>
+      <h3 style="font-family:var(--display);color:var(--amber);font-size:clamp(22px,3vw,30px);font-weight:800;margin-bottom:28px;letter-spacing:-0.3px;">Common Questions</h3>
+      <div class="faq-wrap">
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>Does theautotriage require any specialist hardware or OBD devices?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">No. theautotriage is designed to operate entirely through a standard smartphone — no OBD-II dongles, proprietary sensors, or specialized diagnostic equipment required. The platform's Edge AI architecture performs acoustic signal processing (FFT) and visual fault classification (CNN) using the device's built-in microphone and camera. This hardware-free approach is a core design principle: any UK motorist with a modern smartphone can generate a Technician-Ready case file without mechanical literacy or additional expenditure.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How is theautotriage different from FixMyCar, Carly, or traditional OBD tools?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">FixMyCar and BookMyGarage are transactional booking platforms — they list garages by price and proximity but have no diagnostic intelligence for ambiguous or intermittent faults. Carly and FIXD provide raw OBD-II data but require proprietary hardware dongles and significant mechanical literacy to interpret. theautotriage operates in a fundamentally different category: it is a pre-diagnostic intelligence layer that processes unstructured consumer evidence (audio, imagery, descriptions) into standardized Technician-Ready case files — and routes those cases to certified specialists based on technical suitability rather than proximity. We are the operating system for the pre-booking diagnostic workflow that existing tools entirely ignore.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>How does theautotriage handle EV and ADAS vehicle faults?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">EV and ADAS fault handling is a core design priority. When the PBUCE or CNN classifier infers a high-voltage battery, electric motor, or ADAS calibration fault class, the RSIME routing engine immediately filters the available garage network to show only IMI TechSafe EV Level 3–4 certified workshops or ADAS-qualified facilities with verified calibration equipment. In a market where only 22% of technicians are EV-qualified and 2% hold ADAS certification, this prevents the costly diagnostic failure of routing complex specialist jobs to generalist garages — which currently leads to wasted inspection labor, extended vehicle downtime, and insurer write-offs.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>What makes the RORLE learning engine a genuine competitive moat?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">The RORLE's competitive moat is built on outcome-verified data — not publicly available training sets. Every repair processed through theautotriage generates a "feedback event" where the initial triage prediction is reconciled against the verified workshop invoice (actual parts replaced, labor hours, final fault diagnosis). Over time, this creates a proprietary dataset of the UK vehicle parc's real-world failure modes that is technically impossible for a generalist AI company to replicate without the same institutional garage partnerships. By Year 3, the RORLE target dataset exceeds 500,000 verified UK vehicle fault events — establishing a classification accuracy and cost prediction precision that creates a durable technical moat.</div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q" onclick="toggleFAQ(this)">
+            <h4>Can I participate in the Oxford Regional Pilot before committing to a subscription?</h4>
+            <span class="faq-icon">+</span>
+          </div>
+          <div class="faq-body">Yes — theautotriage is currently recruiting 15 partner garages for the structured Oxford Regional Pilot, which provides full platform access, founder-led onboarding support, and direct input into the product roadmap in exchange for outcome data sharing and feedback participation. Independent garages with EV or ADAS capability, motor insurers seeking FNOL pre-assessment intelligence, and fleet operators managing 50+ vehicles are the priority pilot profiles. Contact us to apply for a pilot partnership position and join the foundational institutional network of the UK's automotive pre-diagnostic intelligence layer.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- end page pricing -->
+
+<!-- ═══════════════════════════════════════════
+     PAGE: CONTACT
+═══════════════════════════════════════════════ -->
+<div class="page" id="page-contact">
+  <section style="background:var(--bg-black);padding:clamp(80px,12vw,120px) 0 clamp(60px,8vw,100px);">
+    <div class="container">
+      <div class="contact-grid">
+
+        <!-- LEFT CONTENT -->
+        <div>
+          <div class="label-tag">Get In Touch</div>
+          <h2 class="section-h2 amber">Join the theautotriage Oxford Regional Pilot</h2>
+          <div class="section-divider divider-amber"></div>
+
+          <p class="contact-left-para">
+            theautotriage is currently recruiting 15 partner garages, motor insurers, and fleet operators for the structured Oxford Regional Pilot — a live deployment programme that provides full platform access in exchange for outcome data partnership. Priority profiles: independent garages with EV or ADAS capability, insurers seeking FNOL pre-assessment intelligence, and fleet operators managing 50+ vehicles.
+          </p>
+
+          <p class="contact-left-para" style="margin-bottom:28px;">
+            Get in touch to schedule a live platform walkthrough and discuss how theautotriage can transform your diagnostic intake from a reactive, uncertain process into a structured, AI-powered workflow — reducing diagnostic labor waste, improving workshop bay utilization, and protecting motorists from repair cost uncertainty at zero additional hardware cost.
+          </p>
+
+          <div class="contact-item">
+            <div class="contact-icon">🌐</div>
+            <div class="contact-item-text"><strong>Website</strong><span>theautotriage.co.uk</span></div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div class="contact-item-text"><strong>Location</strong><span>Oxford, United Kingdom</span></div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">🔒</div>
+            <div class="contact-item-text"><strong>Data Architecture</strong><span>Edge AI · UK Cloud · Privacy by Design</span></div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">🏛️</div>
+            <div class="contact-item-text"><strong>Regulatory Compliance</strong><span>UK GDPR · DVSA API · FCA Consumer Duty · UKCA</span></div>
+          </div>
+
+          <div class="contact-item">
+            <div class="contact-icon">🔬</div>
+            <div class="contact-item-text"><strong>Tech Readiness</strong><span>TRL 7 · Validated Prototype · Oxford Pilot Active</span></div>
+          </div>
+        </div>
+
+        <!-- FORM -->
+        <form class="contact-form-card"
+              action="https://api.web3forms.com/submit"
+              method="POST">
+
+          <h3>Book a Demo</h3>
+
+          <input type="hidden" name="access_key" value="79a2a5a3-84db-4bf3-ab9e-ed3662d2e0b7">
+          <input type="hidden" name="subject" value="New Demo Request - theautotriage">
+          <input type="hidden" name="from_name" value="theautotriage Website">
+
+          <div class="form-group">
+            <label class="form-label">Full Name</label>
+            <input type="text" name="name" class="form-ctrl" placeholder="Your name" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Organisation Name</label>
+            <input type="text" name="business" class="form-ctrl" placeholder="Garage / Insurer / Fleet company" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-ctrl" placeholder="your@organisation.co.uk" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Organisation Type</label>
+            <select name="sector" class="form-ctrl" required>
+              <option value="">Select your sector</option>
+              <option>Independent Garage (General)</option>
+              <option>Independent Garage (EV / ADAS Specialist)</option>
+              <option>Motor Insurer / Loss Adjuster</option>
+              <option>Fleet / Leasing Operator</option>
+              <option>Franchise Dealer Group</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Monthly Vehicle Throughput</label>
+            <select name="volume" class="form-ctrl" required>
+              <option value="">Select volume</option>
+              <option>1–20 vehicles per month</option>
+              <option>20–100 vehicles per month</option>
+              <option>100–500 vehicles per month</option>
+              <option>500+ vehicles per month</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Primary Challenge</label>
+            <textarea name="message" class="form-ctrl ta" required
+              placeholder="Diagnostic intake inefficiency, EV routing failures, insurer write-offs, technician shortage, or repair cost transparency..."></textarea>
+          </div>
+
+          <button class="form-submit" type="submit">
+            Submit Demo Request →
+          </button>
+
+          <div id="formSuccess" style="display:none;margin-top:16px;background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.3);border-radius:8px;padding:14px;color:var(--amber);font-size:13px;text-align:center;font-family:var(--mono);">
+            ✓ Thank you! We'll be in touch within 24 hours.
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </section>
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>
+  </footer>
+</div><!-- end page contact -->
+
+
+<!-- ═══════════ FOOTER (HOME PAGE) ═══════════ -->
+<!-- Note: Home page footer is appended via JS after the last section -->
+
+<!-- ═══════════ JAVASCRIPT ═══════════ -->
+<script>
+/* ─── PAGE NAV ───────────────────────────────── */
+function showPage(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-links button').forEach(b=>b.classList.remove('active'));
+  const pg=document.getElementById('page-'+name);
+  if(pg){pg.classList.add('active');}
+  const btn=document.getElementById('nav-'+name);
+  if(btn){btn.classList.add('active');}
+  window.scrollTo({top:0,behavior:'instant'});
+  if(name==='market'&&!window.marketChartsLoaded){initMarketCharts();window.marketChartsLoaded=true;}
+}
+
+function toggleCard(btn){
+  const card=btn.closest('.platform-card');
+  const isOpen=card.classList.contains('open');
+  document.querySelectorAll('.platform-card').forEach(c=>{
+    c.classList.remove('open');
+    const eb=c.querySelector('.expand-btn');
+    if(eb){eb.textContent=eb.textContent.includes('Expand')?'Expand ↓':'Learn More ↓';}
+  });
+  if(!isOpen){
+    card.classList.add('open');
+    btn.textContent=btn.textContent.includes('Expand')?'Collapse ↑':'Show Less ↑';
+  }
+}
+
+function toggleFAQ(el){
+  el.parentElement.classList.toggle('open');
+}
+
+function closeMobile(){
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('hamburger').classList.remove('open');
+}
+
+document.getElementById('hamburger').addEventListener('click',function(){
+  this.classList.toggle('open');
+  document.getElementById('mobileNav').classList.toggle('open');
+});
+
+/* ─── HOME PAGE FOOTER INJECTION ───────────────────── */
+(function(){
+  const homeFooter = document.createElement('footer');
+  homeFooter.innerHTML = `
+    <div class="footer-inner">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <span class="footer-logo">theautotriage</span>
+          <p>The UK's first AI-powered pre-diagnostic intelligence platform — transforming unstructured consumer evidence into Technician-Ready case files using proprietary PBUCE, MCWTL, RSIME, and RORLE engines, routing vehicles to certified specialists across the UK's £100 billion automotive aftercare sector.</p>
+        </div>
+        <div class="footer-col">
+          <h5>Platform</h5>
+          <a onclick="showPage('platform')">PBUCE Engine</a>
+          <a onclick="showPage('platform')">MCWTL Layer</a>
+          <a onclick="showPage('platform')">RSIME Routing</a>
+          <a onclick="showPage('platform')">RORLE Learning</a>
+        </div>
+        <div class="footer-col">
+          <h5>Company</h5>
+          <a onclick="showPage('about')">About Us</a>
+          <a onclick="showPage('market')">Market Analysis</a>
+          <a onclick="showPage('pricing')">Pricing &amp; Plans</a>
+          <a onclick="showPage('contact')">Book a Demo</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2026 <span>theautotriage</span> · Oxford, United Kingdom · UK GDPR Compliant · Privacy by Design · DVSA API Integrated</p>
+        <p><span>theautotriage.co.uk</span> · Innovator Founder Visa Application · Strictly Confidential</p>
+      </div>
+    </div>`;
+  document.getElementById('page-home').appendChild(homeFooter);
+})();
+
+/* ─── CHART THEME ────────────────────────────── */
+const AMBER='rgba(245,158,11,1)';
+const AMBER2='rgba(245,158,11,0.75)';
+const AMBER3='rgba(245,158,11,0.4)';
+const BLUE='rgba(20,80,160,0.9)';
+const BLUE2='rgba(74,142,232,0.7)';
+const GREEN='rgba(52,211,153,0.8)';
+const GRID='rgba(255,255,255,0.05)';
+const MUTED='rgba(138,175,204,0.75)';
+
+Chart.defaults.font.family="'IBM Plex Mono', monospace";
+Chart.defaults.font.size=11;
+Chart.defaults.color=MUTED;
+
+/* ─── MARKET CHARTS ──────────────────────────── */
+function initMarketCharts(){
+  // Repair Cost Surge by Type
+  new Chart(document.getElementById('chartSector').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['EV Battery Repair','ADAS Calibration','Composite/Structural','Electrical Systems','Powertrain (ICE)','Brakes & Suspension'],
+      datasets:[{
+        label:'% Cost Increase 2023–24',
+        data:[26.8,24.7,22.1,19.5,17.3,14.2],
+        backgroundColor:[AMBER,AMBER2,AMBER3,'rgba(245,158,11,0.25)','rgba(20,80,160,0.6)','rgba(20,80,160,0.4)'],
+        borderRadius:5,barPercentage:0.6
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+'%'}},y:{grid:{display:false},ticks:{color:MUTED,font:{size:10}}}}}
+  });
+
+  // Root Causes of Diagnostic Failure
+  new Chart(document.getElementById('chartRootCause').getContext('2d'),{
+    type:'doughnut',
+    data:{
+      labels:['Information Asymmetry (42%)','Skills Gap / Wrong Routing (31%)','No Hardware Pre-Check (27%)','ADAS Complexity (24%)','EV Battery Ambiguity (18%)'],
+      datasets:[{
+        data:[42,31,27,24,18],
+        backgroundColor:[AMBER,'rgba(245,158,11,0.7)',AMBER3,'rgba(20,80,160,0.65)','rgba(74,142,232,0.5)'],
+        borderColor:['rgba(245,158,11,0.9)','rgba(245,158,11,0.7)','rgba(245,158,11,0.45)','rgba(20,80,160,0.7)','rgba(74,142,232,0.55)'],
+        borderWidth:1.5
+      }]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:10,font:{size:10}}}}}
+  });
+
+  // Radar Competitive
+  new Chart(document.getElementById('chartRadar').getContext('2d'),{
+    type:'radar',
+    data:{
+      labels:['Pre-Booking AI Triage','FFT Acoustic Analysis','CNN Visual Classification','Suitability Routing','Closed-Loop Learning','Hardware-Free Design'],
+      datasets:[
+        {label:'theautotriage',data:[5,5,5,5,5,5],backgroundColor:'rgba(245,158,11,0.12)',borderColor:AMBER,borderWidth:2,pointBackgroundColor:AMBER},
+        {label:'FixMyCar / BookMyGarage',data:[1,1,1,1,1,2],backgroundColor:'rgba(20,80,160,0.07)',borderColor:BLUE2,borderWidth:1.5,pointBackgroundColor:BLUE2},
+        {label:'Carly / FIXD (OBD Tools)',data:[2,1,1,1,1,0],backgroundColor:'rgba(100,180,255,0.06)',borderColor:'rgba(100,180,255,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(100,180,255,0.5)'},
+        {label:'AVILOO (EV Only)',data:[2,1,1,2,1,2],backgroundColor:'rgba(52,211,153,0.06)',borderColor:'rgba(52,211,153,0.5)',borderWidth:1.5,pointBackgroundColor:'rgba(52,211,153,0.5)'},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{r:{backgroundColor:'rgba(245,158,11,0.01)',grid:{color:GRID},pointLabels:{color:MUTED,font:{size:10}},ticks:{display:false},min:0,max:5}}}
+  });
+
+  // Market Growth
+  new Chart(document.getElementById('chartGrowth').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['2023','2024','2025','2026','2027','2028','2029','2030'],
+      datasets:[
+        {label:'Global Automotive AI Market (£B)',data:[4.2,5.8,8.1,11.4,15.9,21.7,29.3,42.8],backgroundColor:'rgba(20,80,160,0.65)',borderRadius:5,barPercentage:0.55},
+        {type:'line',label:'UK EV Adoption Rate (%)',data:[null,3.9,5.2,7.1,9.8,13.4,18.2,28.0],borderColor:AMBER,borderWidth:2,yAxisID:'y2',tension:0.4,pointBackgroundColor:AMBER,fill:false}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:12,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>'£'+v+'B'}},y2:{position:'right',grid:{display:false},ticks:{color:MUTED,callback:v=>v+'%'}}}}
+  });
+
+  // Performance Comparison
+  new Chart(document.getElementById('chartPerf').getContext('2d'),{
+    type:'bar',
+    data:{
+      labels:['Pre-Booking Triage','FFT Acoustics','CNN Vision','Suitability Route','Closed-Loop AI','Hardware-Free'],
+      datasets:[
+        {label:'theautotriage',data:[98,95,92,96,90,100],backgroundColor:AMBER2,borderRadius:5,barPercentage:0.35},
+        {label:'Existing UK Tools Avg',data:[5,5,5,8,0,40],backgroundColor:BLUE2,borderRadius:5,barPercentage:0.35}
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:'bottom',labels:{color:MUTED,boxWidth:10,padding:14,font:{size:10}}}},scales:{x:{grid:{color:GRID},ticks:{color:MUTED,font:{size:9}}},y:{grid:{color:GRID},ticks:{color:MUTED,callback:v=>v+' pts'}}}}
+  });
+}
+</script>
+</body>
+</html>
